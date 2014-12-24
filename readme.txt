@@ -1,4 +1,4 @@
-‹³Ş—pXAudio2ƒTƒEƒ“ƒhƒhƒ‰ƒCƒover 0.0.0 by kawatanik
+‹³Ş—pXAudio2ƒTƒEƒ“ƒhƒhƒ‰ƒCƒover 0.0.0 by kaz-jgs
 
 ¡ŠT—v
 ƒTƒEƒ“ƒhƒvƒƒOƒ‰ƒ~ƒ“ƒO‚Ì“ü‚èŒû‚É—§‚Â‚½‚ß‚Ì‹³Ş—p‚Æ‚µ‚Äì‚Á‚½AƒVƒ“ƒvƒ‹‚ÈƒTƒEƒ“ƒhƒhƒ‰ƒCƒo‚Å‚·B
@@ -18,60 +18,3 @@ Visual Studio‚Åƒrƒ‹ƒh‚·‚é‚±‚Æ‚µ‚©‘z’è‚µ‚Ä‚¢‚È‚¢‚½‚ßA‚Ù‚©‚Ìƒrƒ‹ƒhƒVƒXƒeƒ€‚Å‚Ìg—
 ¡ver 0.0.0‚É‚Â‚¢‚Ä
 ƒtƒ@ƒCƒ‹‚ğH‚í‚¹‚½‚ç‰¹‚ª–Â‚é‚¾‚¯‚Å‚·BƒIƒuƒWƒFƒNƒgŠÇ—‚·‚ç‚ ‚è‚Ü‚¹‚ñB
 ¡ŒãƒNƒ‰ƒX\¬‚ªƒKƒ‰ƒb‚Æ•Ï‚í‚é‰Â”\«‚ª‚ ‚è‚Ü‚·B
-
-
-¡ƒtƒ@ƒCƒ‹ / ƒNƒ‰ƒX
-util/macros_debug.h
-ƒfƒoƒbƒOƒ}ƒNƒ‚ğ’è‹`‚µ‚Ä‚é‚¾‚¯‚Å‚·B‚ ‚Ü‚è‹C‚É‚µ‚È‚­‚Ä‚¢‚¢‚Å‚·B
-
-
-Drv.h / Drv.cpp
-ƒTƒEƒ“ƒhƒhƒ‰ƒCƒo–{‘ÌBƒOƒ[ƒoƒ‹ŠÖ”‚Å‚Å‚«‚Ä‚¢‚Ü‚·B
-
-
-class Core(Core.h / Core.cpp)
-XAudio2‚ÌƒGƒ“ƒWƒ“ŠÇ—‚¨‚æ‚Ñƒ}ƒXƒ^ƒŠƒ“ƒOƒ{ƒCƒXŠÇ—‚ÌƒNƒ‰ƒX‚Å‚·B
-ƒVƒ“ƒOƒ‹ƒgƒ“‚Å‚·B
-
-
-class Master(Master.h / Master.cpp)
-ƒ}ƒXƒ^[ƒgƒ‰ƒbƒNƒNƒ‰ƒX—\’è’n‚Å‚·(–¢À‘•)B
-
-
-class Bus(Bus.h / Bus.cpp)
-o—ÍƒoƒXƒNƒ‰ƒX—\’è’n‚Å‚·(–¢À‘•)B
-
-
-class Snd(Snd.h / Snd.cpp)
-‰¹Œ¹ƒIƒuƒWƒFƒNƒgƒNƒ‰ƒX‚Å‚·B
-ƒIƒ“ƒƒ‚ƒŠÄ¶‚Ì‚İ‚Å‚·B
-ƒXƒgƒŠ[ƒ~ƒ“ƒO‚ÍqƒNƒ‰ƒX‚É‚·‚é‚©“‡‚·‚é‚©”Y‚İ’†‚Å‚·B
-
-
-class SndCallback(SndCallback.h / SndCallback.cpp)
-‰¹Œ¹ƒIƒuƒWƒFƒNƒg—pƒR[ƒ‹ƒoƒbƒNƒNƒ‰ƒX‚Å‚·B
-
-
-class TrackBase(TrackBase.cpp / TrackBase.h)
-ƒgƒ‰ƒbƒN‚ÌŠî’êƒNƒ‰ƒX‚Å‚·B
-MasterABusASnd‚Í‚±‚ÌƒNƒ‰ƒX‚ğŒp³‚µ‚Ü‚·B
-ƒ`ƒƒƒ“ƒlƒ‹ƒXƒgƒŠƒbƒv‚É•K—v‚È‹@”\‚Í‚±‚±‚Éæ‚é—\’è‚Å‚·B
-
-
-class Wave(Wave.cpp / Wave.h)
-Waveƒtƒ@ƒCƒ‹ƒAƒNƒZƒT‚Å‚·B
-w’èƒtƒ@ƒCƒ‹–¼‚ÌWaveƒtƒ@ƒCƒ‹‚ğ“Ç‚ñ‚ÅA”gŒ`ƒoƒbƒtƒ@‚âƒtƒH[ƒ}ƒbƒg‚ğ•Ô‚µ‚Ä‚­‚ê‚Ü‚·B
-’P‚È‚éƒtƒ@ƒCƒ‹ƒp[ƒT‚È‚Ì‚ÅAƒTƒEƒ“ƒhƒhƒ‰ƒCƒo‚Ì—‰ğ‚Æ‚¢‚¤ˆÓ–¡‚Å‚Í‚±‚ÌƒNƒ‰ƒX‚Í“Ç‚Ü‚È‚­‚Ä‚à‚¢‚¢‚Å‚·B
-‚¿‚È‚İ‚É“à•”‚Å–³–¼ƒƒ‚ƒŠƒ}ƒbƒvƒgƒtƒ@ƒCƒ‹‚Æ‚µ‚Äƒ}ƒbƒsƒ“ƒO‚µ‚Ä‚¢‚é‚Ì‚ÅA
-ƒIƒ“ƒƒ‚ƒŠÄ¶‚ğƒWƒƒƒXƒgƒCƒ“ƒ^ƒCƒ€ƒ[ƒh‚Å‹^—ƒXƒgƒŠ[ƒ~ƒ“ƒO‚É‚Å‚«‚Ü‚·B
-
-
-
-¡¡Œã‚ÌÀ‘•—\’è
- - BusƒNƒ‰ƒX‚¨‚æ‚ÑMasterƒNƒ‰ƒX‚ÌÀ‘•
- - ƒIƒuƒWƒFƒNƒgŠÇ—‚ÌÀ‘•
- - Waveƒtƒ@ƒCƒ‹‚Ìsmplƒ`ƒƒƒ“ƒN‚Ìƒp[ƒX‚Æsmplƒ`ƒƒƒ“ƒN‚ğ—p‚¢‚½ƒ‹[ƒvˆ—
- - Waveƒtƒ@ƒCƒ‹‚Ì”ñˆ³kˆÈŠO‚ÌƒtƒH[ƒ}ƒbƒg‘Î‰
- - ƒXƒgƒŠ[ƒ~ƒ“ƒOÄ¶‚ÌÀ‘•
- - ƒGƒtƒFƒNƒgƒ`ƒFƒCƒ“‚ÌÀ‘•
- - ƒGƒtƒFƒNƒgƒCƒ“ƒ^[ƒtƒFƒCƒXƒ‰ƒbƒp‚ÌÀ‘•

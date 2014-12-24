@@ -13,7 +13,6 @@
 struct IXAudio2SourceVoice;
 struct XAUDIO2_BUFFER;
 
-
 namespace xaudio_drv{
 //! コールバッククラスの前方宣言
 class SndCallback;
