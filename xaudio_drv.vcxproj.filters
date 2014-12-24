@@ -1,0 +1,65 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="src">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="inc">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hh;hpp;hxx;hm;inl;inc;xsd</Extensions>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="src\Core.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Drv.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Bus.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Snd.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\TrackBase.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\SndCallback.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Wave.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Master.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="src\Core.h">
+      <Filter>inc</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Drv.h">
+      <Filter>inc</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Bus.h">
+      <Filter>inc</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Snd.h">
+      <Filter>inc</Filter>
+    </ClInclude>
+    <ClInclude Include="src\TrackBase.h">
+      <Filter>inc</Filter>
+    </ClInclude>
+    <ClInclude Include="src\SndCallback.h">
+      <Filter>inc</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Wave.h">
+      <Filter>inc</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Master.h">
+      <Filter>inc</Filter>
+    </ClInclude>
+  </ItemGroup>
+</Project>
