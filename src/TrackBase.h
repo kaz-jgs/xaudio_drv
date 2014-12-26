@@ -8,6 +8,8 @@
  */
 #pragma once
 
+#include "Drv.h"
+
 //! XAudio2インターフェイスの前方宣言
 struct IXAudio2Voice;
 
@@ -23,14 +25,22 @@ public:
 public:
 	virtual bool			exec() = 0;												//! 実行関数
 	bool					updateVolume();											//! 音量更新
+	SndHandle				getHandle() const{ return handle_; }					//! ハンドルの取得
+
 	void					setVolume(float _targetVol, float _fadeTime = 0.f);		//! ボリュームセット
-	float					getVolume() const{ return volInfo_.target; }
+	float					getVolume() const{ return volInfo_.target; }			//! セットされたボリュームの取得
 
 
 
 //! メンバ変数
 protected:
 	IXAudio2Voice* const&	refVoiceBase_;											//! Voiceインターフェイスの基底部分への参照
+	SndHandle				handle_;												//! ハンドル
+
+
+//! 静的メンバ
+protected:
+	static unsigned long	handleSeed__;											//! ハンドル生成の種
 
 //! ボリューム情報
 protected:

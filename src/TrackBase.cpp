@@ -16,12 +16,40 @@ namespace xaudio_drv{
 //! 定数宣言
 static const int TICKS_PER_SECOND = 1000;	// 秒あたりのticks数(Windowsはmsec精度)
 
+/*!
+ * @brief	ハンドル生成
+ *
+ * インスタンスアドレスの下位32bitと32bitの種をバイト単位で並べ替えた8バイト.
+ * 種は0xffffffffスタートでインスタンス生成毎にデクリメント.
+ * 並べ替え規則に特に意味はなく
+ * 「(種がオーバーフローしなければ)被らない」
+ * 「外部で容易に数値を加工して生成できない」
+ * を満たせるようにと。
+ */
+unsigned long TrackBase::handleSeed__ = 0xffffffff;
+#define HANDLE_CREATE(_seed)														\
+	static_cast<SndHandle>(															\
+		((static_cast<unsigned __int64>(_seed)		& 0x0000000000ff0000) >> 16) |	\
+		((reinterpret_cast<unsigned __int64>(this)	& 0x00000000ff000000) >> 16) |	\
+		((static_cast<unsigned __int64>(_seed)		& 0x00000000ff000000) >> 8)  |	\
+		((reinterpret_cast<unsigned __int64>(this)	& 0x000000000000ff00) << 16) |	\
+		((static_cast<unsigned __int64>(_seed)		& 0x00000000000000ff) << 40) |	\
+		((reinterpret_cast<unsigned __int64>(this)	& 0x00000000000000ff) << 40) |	\
+		((static_cast<unsigned __int64>(_seed)		& 0x000000000000ff00) << 40) |	\
+		((reinterpret_cast<unsigned __int64>(this)	& 0x0000000000ff0000) << 40)	\
+	)
 
 /*!
  * @brief		コンストラクタ.
  * @param[in]	_voice	子クラスのXAudioボイスインターフェイスへの参照
  */
-TrackBase::TrackBase(IXAudio2Voice* const& _voice) : refVoiceBase_(_voice){
+TrackBase::TrackBase(IXAudio2Voice* const& _voice) : refVoiceBase_(_voice), handle_(HANDLE_CREATE(handleSeed__--)){
+	// ハンドルの種のオーバーフロー(普通に使ってたらしないと思う)対策
+	if (handleSeed__ > 0);
+	else{
+		AssertMsgBox(false, "[TrackBase] warning : handle counter has overflowed.");
+		handleSeed__ = 0xffffffff;
+	}
 }
 
 /*!

@@ -137,11 +137,53 @@ bool finalize(){
 }
 
 
+/*!
+ * 対象が再生中かどうかの取得
+ */
+bool isPlaying(SndHandle _handle){
+	// 音源オブジェクト配列の走査
+	for (Snd*& targ : sndArray_){
+		// オブジェクトがNULLなら処理をはじく
+		if (targ);
+		else
+			continue;
+
+		// オブジェクトのハンドルが一致すれば再生中かどうかを返す
+		if (targ->getHandle() == _handle){
+			return targ->isPlaying();
+		}
+	}
+
+	return false;
+}
+
+
+/*!
+ * 何かが再生中かどうかの取得
+ */
+bool isPlayingAny(){
+	// 音源オブジェクト配列の走査
+	for (Snd*& targ : sndArray_){
+		// オブジェクトがNULLなら処理をはじく
+		if (targ);
+		else
+			continue;
+
+		// 再生中のものがあればtrueを返す
+		if (targ->isPlaying()){
+			return true;
+		}
+	}
+
+	return false;
+}
+
+
 
 /*!
  * サンプル用投げっぱなし再生関数
  */
-void sample_play(const char* _fileName){
+SndHandle sample_play(const char* _fileName){
 	// Waveファイルを開く
 	Wave* wave = new Wave();
 	wave->open(_fileName);
@@ -161,6 +203,9 @@ void sample_play(const char* _fileName){
 	sndArray_.push_back(snd);
 	waveArray_.push_back(wave);
 	sndBufArray_.push_back(buf);
+
+	// ハンドルを返す
+	return snd->getHandle();
 }
 
 
@@ -188,4 +233,19 @@ int threadFunc(std::future<bool>* _initWait){
 	isReqFinalize_ = false;
 	return 0;
 }
+}
+
+
+//----- 以下Cインターフェイスの実装
+bool XAUDIO_DRV_Initialize(){
+	return xaudio_drv::initialize();
+}
+bool XAUDIO_DRV_Finalize(){
+	return xaudio_drv::finalize();
+}
+bool XAUDIO_DRV_IsPlaying(SndHandle _handle){
+	return xaudio_drv::isPlaying(_handle);
+}
+bool XAUDIO_DRV_IsPlayingAny(){
+	return xaudio_drv::isPlayingAny();
 }
