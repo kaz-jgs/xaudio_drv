@@ -24,7 +24,7 @@ static const int TICKS_PER_SECOND = 1000;	// 秒あたりのticks数(Windowsはmsec精度
  * 並べ替え規則に特に意味はなく
  * 「(種がオーバーフローしなければ)被らない」
  * 「外部で容易に数値を加工して生成できない」
- * を満たせるようにと。
+ * を満たせるようにと.
  */
 unsigned long TrackBase::handleSeed__ = 0xffffffff;
 #define HANDLE_CREATE(_seed)														\

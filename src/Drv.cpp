@@ -35,6 +35,7 @@ static CoreInstanceRef	core_ = Core::getInstanceRef();
 static bool					isInitialized_ = false;	//!< 初期化済みフラグ
 static bool					isReqFinalize_ = false;	//!< 終了リクエスト
 static std::thread*			thread_ = NULL;			//!< スレッドオブジェクト
+static std::promise<bool>	initPromiss_;			//!< 初期化同期用プロミスオブジェクト
 static std::vector<Snd*>	sndArray_;				//!< 音源オブジェクト配列
 static std::vector<Wave*>	waveArray_;				//!< Waveファイル配列
 static std::vector<void*>	sndBufArray_;			//!< 音源バッファ配列
@@ -62,11 +63,12 @@ bool initialize(){
 	// サウンドスレッドの生成
 	{
 		// スレッドオブジェクトと同期オブジェクトの生成
-		std::promise<bool> init_promise;
-		thread_ = new std::thread(threadFunc, &init_promise.get_future());
+		thread_ = new std::thread(threadFunc, &initPromiss_.get_future());
 
-		// サウンドスレッドの開始
-		init_promise.set_value(true);
+		// @todo スレッドの詳細設定
+
+		// サウンドスレッドの開始許可
+		initPromiss_.set_value(true);
 	}
 
 	// 初期化済みフラグを立ててtrueを返す
