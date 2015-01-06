@@ -30,6 +30,10 @@ public:
 	void					setVolume(float _targetVol, float _fadeTime = 0.f);		//! ボリュームセット
 	float					getVolume() const{ return volInfo_.target; }			//! セットされたボリュームの取得
 
+//! 共通クラス内定数
+protected:
+	static const long		DELTA_TICKS_THRESHOLD_ = 1000;							//!< デルタタイムの閾値
+
 
 
 //! メンバ変数

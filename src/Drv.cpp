@@ -40,6 +40,7 @@ static std::vector<Snd*>	sndArray_;				//!< 音源オブジェクト配列
 static std::vector<Wave*>	waveArray_;				//!< Waveファイル配列
 static std::vector<void*>	sndBufArray_;			//!< 音源バッファ配列
 
+static inline Snd* searchSnd(SndHandle _hdl);
 
 /*!
  * 初期化
@@ -140,20 +141,57 @@ bool finalize(){
 
 
 /*!
+ * 対象を停止する
+ */
+bool stop(SndHandle _handle, float _fadeTime/* = 0.f*/){
+	// 音源オブジェクトの検索
+	if (Snd* targ = searchSnd(_handle)){
+		//見つかったら 停止して結果を返す
+		return targ->stop(_fadeTime);
+	}
+
+	return false;
+}
+
+
+/*!
+ * 対象の音量を変更する
+ */
+bool setVolume(SndHandle _handle, float _volume, float _fadeTime/* = 0.f*/){
+	// 音源オブジェクトの検索
+	if (Snd* targ = searchSnd(_handle)){
+		// 見つかったら値を設定してtrueを返す
+		targ->setVolume(_volume, _fadeTime);
+		return true;
+	}
+
+	return false;
+}
+
+
+/*!
+ * 対象の音量を取得する
+ */
+float getVolume(SndHandle _handle){
+	// 音源オブジェクトの検索
+	if (Snd* targ = searchSnd(_handle)){
+		// 見つかったら結果を返す
+		return targ->getVolume();
+	}
+
+	// 見つからなかった場合は0を返す
+	return 0.f;
+}
+
+
+/*!
  * 対象が再生中かどうかの取得
  */
 bool isPlaying(SndHandle _handle){
-	// 音源オブジェクト配列の走査
-	for (Snd*& targ : sndArray_){
-		// オブジェクトがNULLなら処理をはじく
-		if (targ);
-		else
-			continue;
-
-		// オブジェクトのハンドルが一致すれば再生中かどうかを返す
-		if (targ->getHandle() == _handle){
-			return targ->isPlaying();
-		}
+	// 音源オブジェクトの検索
+	if (Snd* targ = searchSnd(_handle)){
+		// 見つかれば再生中かどうかを返す
+		return targ->isPlaying();
 	}
 
 	return false;
@@ -235,6 +273,26 @@ int threadFunc(std::future<bool>* _initWait){
 	isReqFinalize_ = false;
 	return 0;
 }
+
+/*!
+ * 音源オブジェクトの検索インライン関数
+ */
+static inline Snd* searchSnd(SndHandle _hdl){
+	for (Snd*& targ : sndArray_){
+		// オブジェクトがNULLなら処理をはじく
+		if (targ);
+		else
+			continue;
+
+		// ハンドルが一致すれば対象を返す
+		if (targ->getHandle() == _hdl){
+			return targ;
+		}
+	}
+
+	return NULL;
+}
+
 }
 
 

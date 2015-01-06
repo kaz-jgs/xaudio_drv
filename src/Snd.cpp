@@ -19,7 +19,7 @@ namespace xaudio_drv{
  * コンストラクタ
  */
 Snd::Snd(IXAudio2SourceVoice* _srcVoice, SndCallback* _callback) : 
-TrackBase(dynamic_cast<IXAudio2Voice* const>(srcVoice_)),
+TrackBase(reinterpret_cast<IXAudio2Voice* const&>(srcVoice_)),
 srcVoice_(_srcVoice),
 callback_(_callback)
 {
@@ -75,6 +75,11 @@ bool Snd::exec(){
 	// ボリューム情報の変更
 	updateVolume();
 
+	// 停止の処理
+	if (isStopping_ && volInfo_.vol <= 0.f){
+		isPlaying_ = false;
+	}
+
 	return true;
 }
 
@@ -116,7 +121,7 @@ bool Snd::stop(float _fadeTime /* = 0.f */){
 	// フェードタイムが指定されていれば停止リクエストフラグを立てて目標ボリュームを最低に設定
 	else{
 		isStopping_ = true;
-		setVolume(0.f, 0.f);
+		setVolume(0.f, _fadeTime);
 	}
 	return true;
 }

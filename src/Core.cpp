@@ -11,6 +11,7 @@
 #include "Core.h"
 #include "Wave.h"
 #include "Snd.h"
+#include "Bus.h"
 #include "SndCallback.h"
 
 #include "util/macros_debug.h"
@@ -155,6 +156,19 @@ Snd* Core::createSnd(const Wave* _wave, const void* _bufAddr){
 
 	// 音源オブジェクトを作成してインスタンスを返す
 	return new Snd(voice, callback);
+}
+
+
+/*!
+ * 出力バスの生成
+ */
+Bus* Core::createBus(){
+	// サブミクスボイスのインスタンス生成
+	IXAudio2SubmixVoice* voice = NULL;
+	xaudioEngine_->CreateSubmixVoice(&voice, XAUDIO2_DEFAULT_CHANNELS, XAUDIO2_DEFAULT_SAMPLERATE);
+
+	// 出力バスインスタンスを生成して返す
+	return new Bus(voice);
 }
 
 

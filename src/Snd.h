@@ -27,10 +27,6 @@ public:
 	Snd(IXAudio2SourceVoice* _srcVoice, SndCallback* _callback);
 	~Snd();
 
-//! クラス内定数
-protected:
-	static const long		DELTA_TICKS_THRESHOLD_ = 1000;					//!< デルタタイムの閾値
-
 //! メンバ変数
 protected:
 	IXAudio2SourceVoice*	srcVoice_;														
