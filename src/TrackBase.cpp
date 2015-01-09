@@ -43,7 +43,11 @@ unsigned long TrackBase::handleSeed__ = 0xffffffff;
  * @brief		コンストラクタ.
  * @param[in]	_voice	子クラスのXAudioボイスインターフェイスへの参照
  */
-TrackBase::TrackBase(IXAudio2Voice* const& _voice) : refVoiceBase_(_voice), handle_(HANDLE_CREATE(handleSeed__--)){
+TrackBase::TrackBase(IXAudio2Voice* const& _voice) :
+refVoiceBase_(_voice), 
+handle_(HANDLE_CREATE(handleSeed__--)), 
+lastTicks_(GetTickCount())
+{
 	// ハンドルの種のオーバーフロー(普通に使ってたらしないと思う)対策
 	if (handleSeed__ > 0);
 	else{
@@ -51,6 +55,32 @@ TrackBase::TrackBase(IXAudio2Voice* const& _voice) : refVoiceBase_(_voice), hand
 		handleSeed__ = 0xffffffff;
 	}
 }
+
+
+/*!
+ * @brief		Ticksの更新.
+ * @retval		Ticks更新に成功したかどうか.
+ *
+ * lastTicks_を更新します.
+ * 前回更新時からDELTA_TICKS_THRESHOLD_以上のTicksが経過していれば更新
+ * そうでなければ更新しない処理になっています.
+ * 子クラスのexec関数先頭で呼び出してfalseが返ったら処理を打ち切ることで
+ * サウンドスレッドの過負荷防止に使います.
+ */
+bool TrackBase::updateTicks(){
+	// 前回からのデルタを取得
+	unsigned long delta_ticks = GetTickCount() - lastTicks_;
+
+	// デルタタイムが足りてない or オーバーフローが起きていれば更新せずにfalseを返す
+	if (delta_ticks < DELTA_TICKS_THRESHOLD_ || static_cast<signed>(delta_ticks) < 0){
+		return false;
+	}
+
+	// ticks更新してtrueを返す
+	lastTicks_ += delta_ticks;
+	return true;
+}
+
 
 /*!
  * @brief		音量更新.

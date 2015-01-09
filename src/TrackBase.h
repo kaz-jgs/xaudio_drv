@@ -24,27 +24,20 @@ public:
 //! 共通インターフェイス
 public:
 	virtual bool			exec() = 0;												//! 実行関数
-	bool					updateVolume();											//! 音量更新
 	SndHandle				getHandle() const{ return handle_; }					//! ハンドルの取得
 
 	void					setVolume(float _targetVol, float _fadeTime = 0.f);		//! ボリュームセット
 	float					getVolume() const{ return volInfo_.target; }			//! セットされたボリュームの取得
 
-//! 共通クラス内定数
+//! 共通メンバ関数
 protected:
-	static const long		DELTA_TICKS_THRESHOLD_ = 1000;							//!< デルタタイムの閾値
+	bool					updateTicks();											//! 処理時間Ticksの更新
+	bool					updateVolume();											//! 音量更新
 
-
-
-//! メンバ変数
+//! 共通メンバ変数
 protected:
 	IXAudio2Voice* const&	refVoiceBase_;											//! Voiceインターフェイスの基底部分への参照
 	SndHandle				handle_;												//! ハンドル
-
-
-//! 静的メンバ
-protected:
-	static unsigned long	handleSeed__;											//! ハンドル生成の種
 
 //! ボリューム情報
 protected:
@@ -55,6 +48,18 @@ protected:
 		unsigned long		lastTicks;												//!< 最後に処理したTickCount
 	} volInfo_;
 
+
+//! クラス内定数
+private:
+	static const long		DELTA_TICKS_THRESHOLD_ = 500;							//!< デルタタイムの閾値
+
+//! メンバ変数
+private:
+	long					lastTicks_;												//!< 前回update成功時のticks
+
+//! 静的メンバ
+private:
+	static unsigned long	handleSeed__;											//! ハンドル生成の種
 };
 
 }

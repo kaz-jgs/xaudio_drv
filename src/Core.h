@@ -10,7 +10,6 @@
 
 //! XAudio2インターフェイスの前方宣言
 struct IXAudio2;
-struct IXAudio2MasteringVoice;
 
 namespace xaudio_drv{
 //! シングルトンインスタンス型の宣言
@@ -40,7 +39,8 @@ public:
 public:
 	bool			initialize();
 	bool			finalize();
-	void			setMasterVolume(float _volume);
+	bool			exec();
+	void			setMasterVolume(float _volume, float _fadeTime = 0.f);
 	float			getMasterVolume() const;
 	Snd*			createSnd(const Wave* _wave, const void* _bufAddr);
 	Bus*			createBus();
@@ -50,6 +50,6 @@ public:
 //! メンバ変数
 protected:
 	IXAudio2*				xaudioEngine_;	//!< XAudio2のエンジンインスタンスへのポインタ
-	IXAudio2MasteringVoice*	masterTrack_;	//!< マスタリングボイス(マスタートラック)へのポインタ
+	Master*					masterTrack_;	//!< マスタリングボイス(マスタートラック)へのポインタ
 };
 }

@@ -23,7 +23,6 @@ public:
 //! メンバ変数
 protected:
 	IXAudio2SubmixVoice*	submixVoice_;
-	long					lastExec_;										//!< 前回exec関数実行時のticks
 
 
 //! アクセス関数

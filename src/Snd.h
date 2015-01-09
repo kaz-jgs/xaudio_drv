@@ -32,9 +32,6 @@ protected:
 	IXAudio2SourceVoice*	srcVoice_;														
 	SndCallback*			callback_;
 
-	long					lastExec_;										//!< ‘O‰ñexecŠÖ”ŽÀsŽž‚Ìticks
-
-
 	bool					isStopping_;									//!< ’âŽ~’†‚©
 	bool					isPlaying_;
 

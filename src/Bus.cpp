@@ -25,14 +25,10 @@ Bus::~Bus(){
 }
 
 bool Bus::exec(){
-	unsigned long delta_ticks = GetTickCount() - lastExec_;
-
-	// デルタタイムが足りてない or オーバーフローが起きていれば処理しない
-	if (delta_ticks < DELTA_TICKS_THRESHOLD_ || static_cast<signed>(delta_ticks) < 0)
+	// Ticksの更新
+	if (updateTicks());
+	else
 		return false;
-
-	// ticks更新
-	lastExec_ += delta_ticks;
 
 	// ボイスが不正ならこれ以上処理しない
 	if(submixVoice_);

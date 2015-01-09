@@ -26,7 +26,7 @@ namespace xaudio_drv{
 static unsigned long	THREAD_STACK_SIZE = 0x400;
 
 //! スレッド関数のプロトタイプ宣言
-static int threadFunc(std::future<bool>* _initWait);
+static int threadFunc(std::future<bool>& _initWait);
 
 //! コアのシングルトンインスタンスへの参照
 static CoreInstanceRef	core_ = Core::getInstanceRef();
@@ -64,7 +64,7 @@ bool initialize(){
 	// サウンドスレッドの生成
 	{
 		// スレッドオブジェクトと同期オブジェクトの生成
-		thread_ = new std::thread(threadFunc, &initPromiss_.get_future());
+		thread_ = new std::thread(threadFunc, initPromiss_.get_future());
 
 		// @todo スレッドの詳細設定
 
@@ -233,7 +233,7 @@ SndHandle sample_play(const char* _fileName){
 	wave->readBuffer(buf, wave->getWaveSize());
 
 	// 音源オブジェクトを作る
-	Snd* snd = core_->createSnd(wave, static_cast<const void*>(static_cast<const char*>(wave->getMappedAddr()) + wave->getWaveOffset()));
+	Snd* snd = core_->createSnd(wave, static_cast<const void*>(static_cast<const char*>(buf)+wave->getWaveOffset()));
 
 
 	// 再生開始
@@ -253,17 +253,22 @@ SndHandle sample_play(const char* _fileName){
 /*!
  * スレッド関数
  */
-int threadFunc(std::future<bool>* _initWait){
+int threadFunc(std::future<bool>& _initWait){
 	// 初期化完了待ちとエラーチェック
-	if(_initWait->get());
+	if(_initWait.get());
 	else
 		return -1;
 
 	while(isReqFinalize_ == false){
+		// コアの実行処理
+		core_->exec();
+
+		// 処理対象がなければループ先頭へ
 		if(sndArray_.size() > 0);
 		else
 			continue;
 
+		// 音源オブジェクトの実行処理
 		for(Snd*& targ : sndArray_){
 			if(targ)
 				targ->exec();

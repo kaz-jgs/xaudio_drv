@@ -12,6 +12,7 @@
 #include "Wave.h"
 #include "Snd.h"
 #include "Bus.h"
+#include "Master.h"
 #include "SndCallback.h"
 
 #include "util/macros_debug.h"
@@ -94,12 +95,19 @@ bool Core::initialize(){
 		}
 	}
 
-	// マスタリングボイス(マスタートラック)の生成
-	xaudioEngine_->CreateMasteringVoice(&masterTrack_, XAUDIO2_DEFAULT_CHANNELS, XAUDIO2_DEFAULT_SAMPLERATE, 0, 0, NULL);
-	if(masterTrack_);
-	else{
-		AssertMsgBox(false, "Core : creating mastering voice is failed.");
-		return false;
+	// マスタートラックの生成
+	{
+		// XAudio2マスタリングボイスインスタンスの生成
+		IXAudio2MasteringVoice* mastering_voice = NULL;
+		xaudioEngine_->CreateMasteringVoice(&mastering_voice, XAUDIO2_DEFAULT_CHANNELS, XAUDIO2_DEFAULT_SAMPLERATE, 0, 0, NULL);
+		if (mastering_voice);
+		else{
+			AssertMsgBox(false, "Core : creating mastering voice is failed.");
+			return false;
+		}
+
+		// マスタートラックオブジェクトインスタンスの生成
+		masterTrack_ = new Master(mastering_voice);
 	}
 
 	return true;
@@ -116,15 +124,25 @@ bool Core::finalize(){
 	else
 		return false;
 
+	// マスタートラックの開放
 	if(masterTrack_){
-		masterTrack_->DestroyVoice();
+		delete masterTrack_;
 		masterTrack_ = NULL;
 	}
 
+	// XAudioエンジンの開放
 	xaudioEngine_->Release();
 	xaudioEngine_ = NULL;
 
 	return true;
+}
+
+
+/*!
+ * 実行処理
+ */
+bool Core::exec(){
+	return masterTrack_->exec();
 }
 
 
@@ -176,26 +194,21 @@ Bus* Core::createBus(){
  * マスターボリュームの取得
  */
 float Core::getMasterVolume() const{
-	// 戻り値用変数
-	float ret = 0.f;
-
 	// 初期化チェック
 	if(xaudioEngine_ && masterTrack_);
 	else{
 		AssertMsgBox(false, "Core : not initialized of invalid status.");
-		return ret;
+		return 0.f;
 	}
 
 	// マスターからボリュームを取得する
-	masterTrack_->GetVolume(&ret);
-
-	return ret;
+	return masterTrack_->getVolume();
 }
 
 /*!
  * マスターボリュームのセット
  */
-void Core::setMasterVolume(float _volume){
+void Core::setMasterVolume(float _volume, float _fadeTime/* = 0.f*/){
 	// 初期化チェック
 	if (xaudioEngine_ && masterTrack_);
 	else{
@@ -203,6 +216,6 @@ void Core::setMasterVolume(float _volume){
 		return;
 	}
 
-	masterTrack_->SetVolume(_volume);
+	masterTrack_->setVolume(_volume, _fadeTime);
 }
 }
