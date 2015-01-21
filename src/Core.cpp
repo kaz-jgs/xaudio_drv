@@ -159,34 +159,31 @@ Snd* Core::createSnd(const Wave* _wave, const void* _bufAddr){
 
 
 	// XAudio2バッファ構造体を作る
-	XAUDIO2_BUFFER buffer = { 0 };
+	XAUDIO2_BUFFER* buffer = new XAUDIO2_BUFFER();
 	{
-		buffer.pAudioData = static_cast<const BYTE*>(_bufAddr);
-		buffer.Flags = XAUDIO2_END_OF_STREAM;
-		buffer.AudioBytes = _wave->getWaveSize();
-		buffer.LoopBegin = _wave->getLoopBegin();
-		buffer.LoopLength = _wave->getLoopLength();
-		buffer.LoopCount = _wave->getLoopCount();
+		buffer->pAudioData = static_cast<const BYTE*>(_bufAddr);
+		buffer->Flags = XAUDIO2_END_OF_STREAM;
+		buffer->AudioBytes = _wave->getWaveSize();
+		buffer->LoopBegin = _wave->getLoopBegin();
+		buffer->LoopLength = _wave->getLoopLength();
+		buffer->LoopCount = _wave->getLoopCount();
 	}
 
-	// バッファを転送する
-	voice->SubmitSourceBuffer(&buffer);
-
 	// 音源オブジェクトを作成してインスタンスを返す
-	return new Snd(voice, callback);
+	return new Snd(voice, callback, buffer);
 }
 
 
 /*!
  * 出力バスの生成
  */
-Bus* Core::createBus(){
+Bus* Core::createBus(const wchar_t* _busName /* = NULL */){
 	// サブミクスボイスのインスタンス生成
 	IXAudio2SubmixVoice* voice = NULL;
-	xaudioEngine_->CreateSubmixVoice(&voice, XAUDIO2_DEFAULT_CHANNELS, XAUDIO2_DEFAULT_SAMPLERATE);
+	xaudioEngine_->CreateSubmixVoice(&voice, 2, 48000);
 
 	// 出力バスインスタンスを生成して返す
-	return new Bus(voice);
+	return new Bus(voice, _busName);
 }
 
 

@@ -10,10 +10,11 @@
 #include "Bus.h"
 
 namespace xaudio_drv{
-Bus::Bus(IXAudio2SubmixVoice* _submixVoice) :
+Bus::Bus(IXAudio2SubmixVoice* _submixVoice, const wchar_t* _busName) :
 TrackBase(reinterpret_cast<IXAudio2Voice* const&>(submixVoice_)),
 submixVoice_(_submixVoice)
 {
+	wcsncpy_s(busName_, _busName, wcslen(_busName));
 }
 
 

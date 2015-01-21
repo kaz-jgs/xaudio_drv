@@ -18,11 +18,15 @@ namespace xaudio_drv{
 /*!
  * コンストラクタ
  */
-Snd::Snd(IXAudio2SourceVoice* _srcVoice, SndCallback* _callback) : 
+Snd::Snd(IXAudio2SourceVoice* _srcVoice, SndCallback* _callback, const XAUDIO2_BUFFER* _buffer) :
 TrackBase(reinterpret_cast<IXAudio2Voice* const&>(srcVoice_)),
 srcVoice_(_srcVoice),
-callback_(_callback)
+callback_(_callback),
+buffer_(_buffer)
 {
+	// バッファを転送する
+	srcVoice_->FlushSourceBuffers();
+	srcVoice_->SubmitSourceBuffer(buffer_);
 }
 
 
@@ -38,6 +42,10 @@ Snd::~Snd(){
 	if (callback_){
 		delete callback_;
 		callback_ = NULL;
+	}
+	if (buffer_){
+		delete buffer_;
+		buffer_ = NULL;
 	}
 }
 
@@ -74,6 +82,8 @@ bool Snd::exec(){
 	// 停止の処理
 	if (isStopping_ && volInfo_.vol <= 0.f){
 		isPlaying_ = false;
+		isStopping_ = false;
+		srcVoice_->Stop();
 	}
 
 	return true;
@@ -88,8 +98,10 @@ bool Snd::play(float _fadeTime /* = 0.f */){
 	if (!srcVoice_)
 		return false;
 
+	// 再生する
 	srcVoice_->Start(0);
 	isPlaying_ = true;
+	setVolume(1.f, 0.f);
 
 	// フェードタイムが指定されていればボリュームの設定
 	if (_fadeTime > 0.f){

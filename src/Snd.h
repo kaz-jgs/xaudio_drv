@@ -12,6 +12,7 @@
 //! XAudio2インターフェイスの前方宣言
 struct IXAudio2SourceVoice;
 struct XAUDIO2_BUFFER;
+struct XAUDIO2_BUFFER;
 
 namespace xaudio_drv{
 //! コールバッククラスの前方宣言
@@ -24,16 +25,17 @@ friend class SndCallback;
 
 //! コンストラクタとデストラクタ
 public:
-	Snd(IXAudio2SourceVoice* _srcVoice, SndCallback* _callback);
+	Snd(IXAudio2SourceVoice* _srcVoice, SndCallback* _callback, const XAUDIO2_BUFFER* _buffer);
 	~Snd();
 
 //! メンバ変数
 protected:
-	IXAudio2SourceVoice*	srcVoice_;														
-	SndCallback*			callback_;
+	IXAudio2SourceVoice*	srcVoice_;										//!< XAudio2ボイスインスタンス
+	SndCallback*			callback_;										//!< コールバックインスタンス
+	const XAUDIO2_BUFFER*	buffer_;										//!< XAudio2バッファ
 
 	bool					isStopping_;									//!< 停止中か
-	bool					isPlaying_;
+	bool					isPlaying_;										//!< 再生中か
 
 
 //! アクセス関数

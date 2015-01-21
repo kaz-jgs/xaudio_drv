@@ -22,6 +22,11 @@ public:
 	Master(IXAudio2MasteringVoice* _masteringVoice);
 	~Master();
 
+//! バス設定をオーバーライドして禁止
+public:
+	virtual	bool setOutputBus(const Bus*, unsigned int){ return false; }
+	virtual	bool addOutputBus(const Bus*, unsigned int){ return false; }
+
 //! メンバ変数
 protected:
 	IXAudio2MasteringVoice*	masteringVoice_;

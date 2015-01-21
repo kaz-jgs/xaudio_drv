@@ -43,7 +43,7 @@ public:
 	void			setMasterVolume(float _volume, float _fadeTime = 0.f);
 	float			getMasterVolume() const;
 	Snd*			createSnd(const Wave* _wave, const void* _bufAddr);
-	Bus*			createBus();
+	Bus*			createBus(const wchar_t* _busName = NULL);
 
 
 

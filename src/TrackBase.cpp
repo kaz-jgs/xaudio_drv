@@ -7,6 +7,8 @@
  *=================================================================================
  */
 #include "TrackBase.h"
+#include "Bus.h"
+
 #include <XAudio2.h>
 #include <time.h>
 
@@ -46,7 +48,9 @@ unsigned long TrackBase::handleSeed__ = 0xffffffff;
 TrackBase::TrackBase(IXAudio2Voice* const& _voice) :
 refVoiceBase_(_voice), 
 handle_(HANDLE_CREATE(handleSeed__--)), 
-lastTicks_(GetTickCount())
+lastTicks_(GetTickCount()),
+sendList_(new XAUDIO2_SEND_DESCRIPTOR[SEND_LIST_MAX_]()),
+sendNum_(0)
 {
 	// ハンドルの種のオーバーフロー(普通に使ってたらしないと思う)対策
 	if (handleSeed__ > 0);
@@ -54,6 +58,10 @@ lastTicks_(GetTickCount())
 		AssertMsgBox(false, "[TrackBase] warning : handle counter has overflowed.");
 		handleSeed__ = 0xffffffff;
 	}
+}
+
+TrackBase::~TrackBase(){
+	delete[] sendList_;
 }
 
 
@@ -152,5 +160,41 @@ void TrackBase::setVolume(float _targetVol, float _fadeTime /* = 0.f */){
 		volInfo_.delta = (volInfo_.target - volInfo_.vol) * (1.f / (_fadeTime * TICKS_PER_SECOND));
 		volInfo_.lastTicks = GetTickCount();
 	}
+}
+
+/*!
+ * @brief		出力バスの設定
+ * @param[in]	_bus	バス配列の先頭ポインタ
+ * @param[in]	_num	バス配列の要素数
+ */
+bool TrackBase::setOutputBus(const Bus* _bus, unsigned int _num){
+	// 引数オーバーのチェック
+	if (_num < SEND_LIST_MAX_);
+	else
+		return false;
+
+	// send数の保持
+	sendNum_ = _num;
+
+	// sendList_のクリア
+	memset(sendList_, 0, sizeof(*sendList_) * SEND_LIST_MAX_);
+
+	// バスがNULLでなければsendList_にVoiceインターフェイスを格納する
+	if (_bus){
+		for (unsigned int cnt = 0; cnt < _num; cnt++){
+			sendList_[cnt].pOutputVoice = (_bus + cnt)->refVoiceBase_;
+			sendList_[cnt].Flags = 0;
+		}
+	}
+
+	// voice_sendsの構造体作成
+	XAUDIO2_VOICE_SENDS sends;
+	sends.SendCount = sendNum_;
+	sends.pSends = (_num > 0)? sendList_ : NULL; // 数が0ならpSendsにNULL指定(= 無出力)
+
+	// バスがNULLでなければsends, バスがNULLでバス数が1以上ならNULL(= マスターへ送る), バスがNULLで数も0なら無出力のsends
+	refVoiceBase_->SetOutputVoices(_bus ? &sends : (_num > 0) ? NULL : &sends);
+
+	return true;
 }
 }
